@@ -1,3 +1,4 @@
+import { useState } from "react";
 import {
   Box,
   Flex,
@@ -5,6 +6,15 @@ import {
   Button,
   IconButton,
   useDisclosure,
+  Drawer,
+  DrawerOverlay,
+  DrawerContent,
+  DrawerCloseButton,
+  DrawerHeader,
+  DrawerBody,
+  Blur,
+  Center,
+  VStack
 } from "@chakra-ui/react";
 import { HamburgerIcon, CloseIcon } from "@chakra-ui/icons";
 import Link from "next/link";
@@ -12,6 +22,11 @@ import Image from "next/image";
 
 export default function Header() {
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const [isMobile, setIsMobile] = useState(false);
+  // toggle mobile menu and blur effect
+  const toggleMobileMenu = () => {
+    setIsMobile(!isMobile);
+  };
 
   return (
     <Flex
@@ -73,38 +88,69 @@ export default function Header() {
           </Button>
         </Link>
       </Box>
-      <Box display={{ base: "flex", md: "none" }} alignItems="center">
+      <Box display={{ base: "block", md: "none" }}>
         <IconButton
-          icon={isOpen ? <CloseIcon /> : <HamburgerIcon />}
+          icon={<HamburgerIcon />}
           aria-label="Open menu"
           variant="ghost"
-          onClick={isOpen ? onClose : onOpen}
+          onClick={toggleMobileMenu}
         />
-      </Box>
-      <Box
-        display={{ base: isOpen ? "block" : "none", md: "none" }}
-        flexBasis={{ base: "100%", md: "auto" }}
-        flexGrow={1}
-      >
-        <Box py={{ base: 4, md: 0 }}>
-          <Box mb={2}>
-            <Box as="span" color="blue.300">
-              01
-            </Box>{" "}
-            <Box as="span">Menu item</Box>
-          </Box>
-          <Box mb={2}>
-            <Box as="span" color="green.300">
-              02
-            </Box>{" "}
-            <Box as="span">Menu item</Box>
-          </Box>
-          <Link href="/resume.pdf" passHref>
-            <Button  variant="solid" colorScheme="blue" w="full">
-              Resume
-            </Button>
-          </Link>
-        </Box>
+
+        <Drawer
+          isOpen={isMobile}
+          placement="right"
+          onClose={toggleMobileMenu}
+          size="xs"
+        >
+          <DrawerOverlay />
+          <DrawerContent bg="gray.800" color="white">
+            <DrawerCloseButton />
+            <DrawerHeader>Menu</DrawerHeader>
+            <DrawerBody>
+              <Center h="100%">
+                <VStack spacing="1rem" fontFamily="SF Mono">
+                  <Box mb="2rem">
+                    <Box  color="green.300">
+                      01.
+                    </Box>
+                    
+                    <Box>
+                      About
+                    </Box>
+                  </Box>
+                  <Box mb="2rem">
+                    <Box as="span" color="green.300" >
+                      02.
+                    </Box>
+                    
+                    <Box as="span" >
+                      Experience
+                    </Box>
+                  </Box>
+                  <Box mb="2rem">
+                    <Box as="span" color="green.300">
+                      03.
+                    </Box>
+                    {"  "}
+                    <Box as="span">Projects</Box>
+                  </Box>
+                  <Box mb="2rem">
+                    <Box as="span" color="green.300">
+                      04.
+                    </Box>
+                    {"  "}
+                    <Box as="span">Contact</Box>
+                  </Box>
+                  <Link href="/resume.pdf" passHref>
+                    <Button variant="solid" colorScheme="blue" mb="2rem">
+                      Resume
+                    </Button>
+                  </Link>
+                </VStack>
+              </Center>
+            </DrawerBody>
+          </DrawerContent>
+        </Drawer>
       </Box>
     </Flex>
   );
